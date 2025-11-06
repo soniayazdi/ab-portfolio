@@ -1,0 +1,465 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Creative Marketing Strategist Food & Lifestyle Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Domine:wght@400..700&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Montserrat+Alternates:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Onest:wght@100..900&family=Pacifico&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18.2.0",
+          "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+          "lucide-react": "https://esm.sh/lucide-react@0.544.0"
+        }
+      }
+    </script>
+    <style>
+        :root {
+            --primary-500: #6366f1;
+            --primary-600: #5456cc;
+            --font-family: 'Montserrat Alternates', sans-serif;
+            
+            --page-background-color: #cfc6fb;
+            --page-text-color: #1F2937;
+            --page-title-color: #151d28;
+            --page-details-text-color: #3e4651;
+            --page-link-color: #4b4b77;
+
+            --header-background-color: #ac9ef0;
+            --header-title-color: #303d4f;
+            --header-text-color: #485260;
+            --header-link-color: #52538e;
+
+            --card-background-color: #ebe9f7;
+            --card-title-color: #1F2937;
+            --card-text-color: #4B5563;
+            --card-category-color: #6366f1;
+            
+            --category-active-bg: #ac7ff0;
+            --category-active-text: #efdff6;
+            --category-inactive-text: #6a5a72;
+            
+            --card-corner-radius: 13px;
+            --grid-gap: 10px;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        body { 
+            font-family: var(--font-family);
+            background: var(--page-background-color);
+            color: var(--page-text-color);
+            height: 100vh;
+            margin: 0;
+        }
+        #root { height: 100%; }
+        .animate-fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Typography & Colors */
+        .prose { color: var(--page-text-color); }
+        .portfolio-page-title { color: var(--page-title-color); }
+        .portfolio-details-text { color: var(--page-details-text-color); }
+        .portfolio-page-link { color: var(--page-link-color); }
+
+        /* Enhanced typography for more interesting fonts */
+        h1 {
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+        }
+
+        h2 {
+          font-weight: 600;
+          letter-spacing: -0.01em;
+          line-height: 1.2;
+        }
+
+        h3 {
+          font-weight: 500;
+          letter-spacing: -0.005em;
+          line-height: 1.3;
+        }
+
+        .portfolio-header { background: var(--header-background-color); }
+        .portfolio-header-title { color: var(--header-title-color); }
+        .portfolio-header-text { color: var(--header-text-color); }
+        .portfolio-header-link { color: var(--header-link-color); }
+        .portfolio-header-link:hover { color: var(--primary-600); }
+
+        .project-card, .project-list-item { background: var(--card-background-color); }
+        .project-card-title-text, .project-list-item .project-card-title-text { color: var(--card-title-color); }
+        .project-card-body-text, .project-list-item .project-card-body-text { color: var(--card-text-color); }
+        .project-card-category-text, .project-list-item .project-card-category-text { color: var(--card-category-color); }
+
+        /* Layout & Misc */
+        .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+        .line-clamp-3 { overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+        .focus\:ring-primary-500:focus { --tw-ring-color: var(--primary-500); }
+        .category-tab-inactive:hover { background: rgba(100, 115, 135, 0.1); }
+        .break-inside-avoid { break-inside: avoid; }
+        .project-card, .project-list-item { border-radius: var(--card-corner-radius); box-shadow: var(--card-shadow); }
+        .projects-container { gap: var(--grid-gap); }
+        .projects-container-masonry { column-gap: var(--grid-gap); }
+        .masonry-item { margin-bottom: var(--grid-gap); }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script src="./data.js"></script>
+    
+    <script type="module">
+        import React, { useState, useMemo, useEffect } from 'react';
+        import { createRoot } from 'react-dom/client';
+
+        // Data is loaded from this external script, which will be generated in the ZIP file
+        // window.portfolioData, window.portfolioSettings, window.imageMap are expected to be defined
+
+        // --- SVG Icons (as components) ---
+        const ArrowLeftIcon = (props) => React.createElement('svg', { ...props, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" }));
+        const ArrowRightIcon = (props) => React.createElement('svg', { ...props, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" }));
+        const CloseIcon = (props) => React.createElement('svg', { ...props, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M6 18L18 6M6 6l12 12" }));
+        const ChevronLeftIcon = (props) => React.createElement('svg', { ...props, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M15.75 19.5L8.25 12l7.5-7.5" }));
+        const ChevronRightIcon = (props) => React.createElement('svg', { ...props, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M8.25 4.5l7.5 7.5-7.5 7.5" }));
+        const ViewGridIcon = (props) => React.createElement('svg', { ...props, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25v2.25a2.25 2.25 0 01-2.25 2.25h-2.25A2.25 2.25 0 0113.5 8.25v2.25zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25v2.25a2.25 2.25 0 01-2.25 2.25h-2.25a2.25 2.25 0 01-2.25-2.25v-2.25z" }));
+        const ViewListIcon = (props) => React.createElement('svg', { ...props, xmlns: "http://www.w3.org/2000/svg", fill: "none", viewBox: "0 0 24 24", strokeWidth: 1.5, stroke: "currentColor" }, React.createElement('path', { strokeLinecap: "round", strokeLinejoin: "round", d: "M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" }));
+
+        // --- React Components ---
+        const AppHeader = ({ settings, full }) => {
+            const { title, author, bio, links, logoImageFilename } = settings;
+            const logoUrl = window.imageMap.get(logoImageFilename);
+
+            if (full) {
+            return React.createElement('header', { className: "portfolio-header py-12" },
+                React.createElement('div', { className: "container mx-auto px-4 sm:px-6 lg:px-8 text-center" },
+                    logoUrl && React.createElement('img', { src: logoUrl, alt: "Portfolio Logo", loading: 'lazy', className: "h-24 w-24 rounded-full object-cover mx-auto mb-4" }),
+                    React.createElement('h1', { className: "portfolio-header-title text-4xl font-bold tracking-tight sm:text-5xl" }, title),
+                    React.createElement('p', { className: "portfolio-header-text mt-3 text-xl" }, '' + author),
+                    React.createElement('p', { className: "portfolio-header-text mt-4 max-w-2xl mx-auto whitespace-pre-wrap" }, bio),
+                    links && links.length > 0 && React.createElement('div', { className: "mt-6 flex justify-center items-center gap-x-6 gap-y-2 flex-wrap" },
+                        links.map(link => React.createElement('a', { href: link.url, key: link.label, target: "_blank", rel: "noopener noreferrer", className: "portfolio-header-link text-sm font-semibold leading-6" }, link.label))
+                    )
+                )
+            );
+            } else {
+            return React.createElement('header', { className: "portfolio-header py-12" },
+                React.createElement('div', { className: "container mx-auto px-4 sm:px-6 lg:px-8 text-center" },
+                    // logoUrl && React.createElement('img', { src: logoUrl, alt: "Portfolio Logo", loading: 'lazy', className: "h-24 w-24 rounded-full object-cover mx-auto mb-4" }),
+                    React.createElement('h1', { className: "portfolio-header-title text-2xl font-bold tracking-tight sm:text-2xl" }, title),
+                    React.createElement('p', { className: "portfolio-header-text mt-3 text-xl" }, '' + author),
+                // React.createElement('p', { className: "portfolio-header-text mt-4 max-w-2xl mx-auto whitespace-pre-wrap" }, bio),
+                // links && links.length > 0 && React.createElement('div', { className: "mt-6 flex justify-center items-center gap-x-6 gap-y-2 flex-wrap" },
+                    // links.map(link => React.createElement('a', { href: link.url, key: link.label, target: "_blank", rel: "noopener noreferrer", className: "portfolio-header-link text-sm font-semibold leading-6" }, link.label))
+                )
+            )
+            }
+        };
+        const Footer = () => React.createElement('footer', { className: "py-4" }, React.createElement('div', { className: "container mx-auto px-4 sm:px-6 lg:px-8 text-center" }, React.createElement('a', { className: "text-sm text-gray-500", href: "https://folfolio.com" }, 'Get your Ai-powered portfolio at folfolio.com')));
+        
+        const ProjectCard = ({ project, imageUrl, onClick, isMasonry }) => {
+            const settings = window.portfolioSettings;
+            const showText = !settings.cardsOnlyShowImage;
+
+            return React.createElement('button', {
+                onClick, 
+                className: "project-card group overflow-hidden transform hover:-translate-y-1 transition-all duration-300 ease-in-out hover:shadow-xl text-left w-full flex flex-col",
+                'aria-label': 'View details for ' + project.title
+              },
+              React.createElement('div', { className: "relative flex-shrink-0" },
+                  imageUrl 
+                    ? (isMasonry
+                        ? React.createElement('img', { src: imageUrl, alt: project.title, loading: 'lazy', className: 'w-full h-auto object-cover' })
+                        : React.createElement('div', { ref: (el) => { if (el && imageUrl) { const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { el.style.backgroundImage = 'url("' + imageUrl + '")'; observer.disconnect(); } }); }, { rootMargin: '50px' }); observer.observe(el); } }, className: "w-full h-56 bg-cover bg-center", style: { backgroundColor: '#e5e7eb' } })
+                      )
+                    : React.createElement('div', { className: "w-full bg-gray-200 flex items-center justify-center " + (isMasonry ? 'aspect-[4/3]' : 'h-56') }),
+                  React.createElement('div', { className: "absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-opacity duration-300 pointer-events-none" })
+              ),
+              showText && React.createElement('div', { className: "p-5 flex-grow flex flex-col" },
+                  React.createElement('p', { className: "project-card-category-text text-sm font-medium" }, project.category),
+                  React.createElement('h3', { className: "project-card-title-text mt-1 text-lg font-semibold" }, project.title),
+                  React.createElement('p', { className: "project-card-body-text mt-2 text-sm line-clamp-5 flex-grow" }, project.description)
+              )
+            );
+        };
+        
+        const ProjectListItem = ({ project, imageUrl, onClick }) => React.createElement('button', {
+            onClick, 
+            className: "project-list-item group overflow-hidden transition-all duration-300 ease-in-out hover:shadow-xl w-full flex items-stretch text-left",
+            'aria-label': 'View details for ' + project.title },
+            React.createElement('div', { className: "relative w-32 md:w-48 flex-shrink-0" },
+                imageUrl 
+                    ? React.createElement('div', { ref: (el) => { if (el && imageUrl) { const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { el.style.backgroundImage = 'url("' + imageUrl + '")'; observer.disconnect(); } }); }, { rootMargin: '50px' }); observer.observe(el); } }, className: "w-full h-full bg-cover bg-center", style: { backgroundColor: '#e5e7eb' } }) 
+                    : React.createElement('div', { className: "w-full h-full bg-gray-200" })
+            ),
+            React.createElement('div', { className: "p-4 flex-grow" },
+                React.createElement('p', { className: "project-card-category-text text-sm font-medium" }, project.category),
+                React.createElement('h3', { className: "project-card-title-text mt-1 text-lg font-semibold" }, project.title),
+                React.createElement('p', { className: "project-card-body-text mt-2 text-sm line-clamp-2" }, project.description)
+            )
+        );
+
+        const ImageModal = ({ images, selectedIndex, onClose, onNext, onPrev }) => {
+            useEffect(() => {
+                const handleKeyDown = (event) => {
+                    if (event.key === 'Escape') onClose();
+                    if (event.key === 'ArrowRight') onNext();
+                    if (event.key === 'ArrowLeft') onPrev();
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                document.body.style.overflow = 'hidden';
+                return () => {
+                    window.removeEventListener('keydown', handleKeyDown);
+                    document.body.style.overflow = 'auto';
+                };
+            }, [onClose, onNext, onPrev]);
+
+            const imageUrl = images[selectedIndex];
+
+            return React.createElement('div', { className: "fixed inset-0 bg-black/80 flex items-center justify-center z-50 animate-fade-in px-4", onClick: onClose, 'aria-modal': "true", role: "dialog" },
+                React.createElement('button', { onClick: onClose, className: "absolute top-4 right-4 z-[60] p-2 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors", 'aria-label': "Close image viewer" }, React.createElement(CloseIcon, { className: "w-8 h-8" })),
+                React.createElement('button', { onClick: (e) => { e.stopPropagation(); onPrev(); }, className: "absolute left-4 top-1/2 -translate-y-1/2 z-[60] p-2 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors", 'aria-label': "Previous image" }, React.createElement(ChevronLeftIcon, { className: "w-8 h-8" })),
+                React.createElement('button', { onClick: (e) => { e.stopPropagation(); onNext(); }, className: "absolute right-4 top-1/2 -translate-y-1/2 z-[60] p-2 bg-white/10 rounded-full text-white hover:bg-white/20 transition-colors", 'aria-label': "Next image" }, React.createElement(ChevronRightIcon, { className: "w-8 h-8" })),
+                React.createElement('div', { className: "relative max-w-5xl max-h-[90vh]", onClick: (e) => e.stopPropagation() },
+                    React.createElement('img', { src: imageUrl, alt: 'High resolution view, image ' + (selectedIndex + 1) + ' of ' + images.length, loading: 'lazy', className: "w-auto h-auto max-w-full max-h-[90vh] object-contain rounded-xl" })
+                )
+            );
+        };
+
+        const ProjectDetail = ({ project, onBack, onNextProject, onPrevProject }) => {
+            const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+            const projectImages = project.imageFilenames.map(filename => window.imageMap.get(filename)).filter(Boolean);
+
+            const handleImageClick = (index) => setSelectedImageIndex(index);
+            const handleCloseModal = () => setSelectedImageIndex(null);
+            const handleNextImage = () => { if (selectedImageIndex !== null) setSelectedImageIndex((selectedImageIndex + 1) % projectImages.length); };
+            const handlePrevImage = () => { if (selectedImageIndex !== null) setSelectedImageIndex((selectedImageIndex - 1 + projectImages.length) % projectImages.length); };
+            
+            return React.createElement(React.Fragment, null,
+                React.createElement('div', { className: "w-full py-10 animate-fade-in" },
+                    React.createElement('div', { className: "mb-8 max-w-7xl mx-auto flex justify-between items-center" }, 
+                        React.createElement('button', { onClick: onBack, className: "portfolio-page-link inline-flex items-center gap-2 text-sm font-medium" }, React.createElement(ArrowLeftIcon, { className: "w-5 h-5" }), 'Back to Portfolio'),
+                        
+                        // Navigation buttons
+                        (onPrevProject || onNextProject) && React.createElement('div', { className: "flex items-center gap-2" },
+                            onPrevProject && React.createElement('button', { 
+                                onClick: onPrevProject, 
+                                className: "inline-flex items-center gap-2 px-3 py-2 bg-white text-gray-700 text-sm font-semibold rounded-xl shadow-md border border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500",
+                                title: "Previous Project"
+                            }, React.createElement(ArrowLeftIcon, { className: "w-4 h-4" }), 'Previous'),
+                            onNextProject && React.createElement('button', { 
+                                onClick: onNextProject, 
+                                className: "inline-flex items-center gap-2 px-3 py-2 bg-white text-gray-700 text-sm font-semibold rounded-xl shadow-md border border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500",
+                                title: "Next Project"
+                            }, 'Next', React.createElement(ArrowRightIcon, { className: "w-4 h-4" }))
+                        ),
+                        
+                    ),
+                    React.createElement('article', { className: "max-w-7xl mx-auto" },
+                        // Hero section with main image
+                        projectImages.length > 0 && React.createElement('section', { className: "relative mb-12 rounded-xl overflow-hidden shadow-lg" },
+                            React.createElement('div', { className: "relative h-96 md:h-[500px] lg:h-[600px] cursor-pointer", onClick: () => handleImageClick(0) },
+                                React.createElement('img', { 
+                                    src: projectImages[0], 
+                                    alt: project.title + ' - Main image', 
+                                    className: "w-full h-full object-cover",
+                                    loading: 'lazy'
+                                }),
+                                React.createElement('div', { className: "absolute inset-0 bg-black/30" }),
+                                React.createElement('div', { className: "absolute bottom-0 left-0 right-0 p-8 text-white" },
+                                    React.createElement('p', { className: "text-sm font-semibold tracking-wide uppercase mb-2 opacity-90" }, project.category),
+                                    React.createElement('h1', { className: "text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight" }, project.title)
+                                )
+                            )
+                        ),
+                        React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-3 gap-8" },
+                            React.createElement('div', { className: "md:col-span-2" }, React.createElement('h2', { className: "portfolio-page-title text-2xl font-semibold mb-4 border-b pb-2" }, 'Description'), React.createElement('div', { className: "prose prose-lg whitespace-pre-wrap" }, project.longDescription)),
+                            React.createElement('aside', null, React.createElement('h2', { className: "portfolio-page-title text-2xl font-semibold mb-4 border-b pb-2" }, 'Details'), React.createElement('dl', { className: "space-y-4" }, project.metadata.map((meta, index) => React.createElement('div', { key: index }, React.createElement('dt', { className: "portfolio-details-text text-sm font-medium" }, meta.key), React.createElement('dd', { className: "portfolio-details-text mt-1 text-base" }, meta.value)))))
+                        ),
+                        React.createElement('section', { className: "mt-12" }, React.createElement('h2', { className: "portfolio-page-title text-3xl font-bold mb-6 border-b pb-3" }, 'Gallery'),
+                            React.createElement('div', { className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4" }, project.imageFilenames.map((filename, index) => {
+                                const imageUrl = window.imageMap.get(filename);
+                                return imageUrl ? React.createElement('button', { key: filename, onClick: () => handleImageClick(index), className: "project-card aspect-w-1 aspect-h-1 block w-full h-full overflow-hidden group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500", 'aria-label': 'View larger image for ' + project.title + ' - image ' + (index + 1) }, React.createElement('img', { src: imageUrl, alt: project.title + ' - image ' + (index + 1), loading: 'lazy', className: "w-full h-full object-cover group-hover:scale-105 transform transition-transform duration-300" })) : React.createElement('div', { key: filename, className: "aspect-w-1 aspect-h-1 w-full h-full bg-gray-200 flex items-center justify-center rounded-xl" }, React.createElement('span', { className: "text-gray-400 text-xs text-center" }, 'Image not found'));
+                            }))
+                        )
+                    )
+                ),
+                selectedImageIndex !== null && React.createElement(ImageModal, { images: projectImages, selectedIndex: selectedImageIndex, onClose: handleCloseModal, onNext: handleNextImage, onPrev: handlePrevImage })
+            );
+        };
+        
+        const PortfolioDisplay = ({ onProjectSelect }) => {
+            const settings = window.portfolioSettings;
+            const portfolioData = window.portfolioData;
+            const [activeCategory, setActiveCategory] = useState('All');
+            const [view, setView] = useState(settings.defaultView || 'card');
+            
+            // Filter out hidden projects for display
+            const visibleProjects = useMemo(() => portfolioData.filter(p => !p.hidden), [portfolioData]);
+            
+            const categories = useMemo(() => {
+                // Collect all categories from visible projects only, split by comma if CSV, and create unique set
+                const allCategories = visibleProjects.flatMap(p => 
+                    p.category.split(/[,/|]/).map(cat => cat.trim())
+                );
+                return ['All', ...Array.from(new Set(allCategories)).sort()];
+            }, [visibleProjects]);
+            const filteredProjects = useMemo(() => {
+                if (activeCategory === 'All') return visibleProjects;
+                // Check if the project's categories (CSV) include the active category
+                return visibleProjects.filter(p => {
+                    const projectCategories = p.category.split(/[,/|]/).map(cat => cat.trim()); 
+                    return projectCategories.includes(activeCategory);
+                });
+            }, [visibleProjects, activeCategory]);
+            
+            const tabElements = categories.map(category => {
+                const isActive = activeCategory === category;
+                return React.createElement('button', {
+                    key: category,
+                    onClick: () => setActiveCategory(category),
+                    style: { background: isActive ? 'var(--category-active-bg)' : 'transparent', color: isActive ? 'var(--category-active-text)' : 'var(--category-inactive-text)' },
+                    className: 'border whitespace-nowrap py-2 px-4 flex flex-shrink rounded-full font-medium text-nowrap text-sm text-left transition-colors duration-200 focus:outline-none ' + (!isActive ? 'category-tab-inactive' : '')
+                }, category);
+            });
+
+            const columnClasses = { 1: 'sm:grid-cols-1', 2: 'sm:grid-cols-2', 3: 'sm:grid-cols-2 lg:grid-cols-3', 4: 'sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4' };
+            const masonryContainerClasses = { 1: 'sm:columns-1', 2: 'sm:columns-2', 3: 'sm:columns-3', 4: 'sm:columns-4' };
+            const isMasonry = settings.layout === 'masonry';
+
+            const containerClasses = 'projects-container ' + (view === 'list'
+                ? 'flex flex-col'
+                : isMasonry
+                    ? 'w-full projects-container-masonry ' + (masonryContainerClasses[settings.columns] || 'sm:columns-3')
+                    : 'grid grid-cols-1 ' + (columnClasses[settings.columns] || 'lg:grid-cols-3'));
+
+            const projectElements = filteredProjects.map((project) => {
+                const imageUrl = window.imageMap.get(project.coverImageFilename) || '';
+                const props = { project, imageUrl, onClick: () => onProjectSelect(project), isMasonry };
+
+                const cardElement = view === 'list' ? React.createElement(ProjectListItem, props) : React.createElement(ProjectCard, props);
+                
+                if (isMasonry && view === 'card') {
+                    return React.createElement('div', { key: project.id, className: 'masonry-item break-inside-avoid' }, cardElement);
+                }
+                return React.createElement(React.Fragment, { key: project.id }, cardElement);
+            });
+
+            return React.createElement('div', { className: "w-full py-10 animate-fade-in" },
+                React.createElement('div', { className: "mb-8 flex justify-between items-center" },
+                    React.createElement('nav', { className: "flex overflow-y-visible flex-wrap gap-1", 'aria-label': "Tabs" }, tabElements),
+                     React.createElement('div', { className: "flex items-center p-1 bg-gray-200 rounded-xl ml-4" },
+                        React.createElement('button', { onClick: () => setView('card'), className: 'p-1.5 rounded-md ' + (view === 'card' ? 'bg-white shadow-sm' : 'text-gray-500 hover:bg-gray-300/50'), 'aria-label': "Card View" }, React.createElement(ViewGridIcon, { className: "w-5 h-5" })),
+                        React.createElement('button', { onClick: () => setView('list'), className: 'p-1.5 rounded-md ' + (view === 'list' ? 'bg-white shadow-sm' : 'text-gray-500 hover:bg-gray-300/50'), 'aria-label': "List View" }, React.createElement(ViewListIcon, { className: "w-5 h-5" }))
+                    )
+                ),
+                React.createElement('div', { className: containerClasses },
+                    projectElements,
+                    filteredProjects.length === 0 && React.createElement('p', { className: "text-gray-500 col-span-full text-center" }, 'No projects found for this category.')
+                )
+            );
+        };
+
+        const App = () => {
+            const [selectedProject, setSelectedProject] = useState(null);
+            const [prevProject, setPrevProject] = useState(null);
+            const [nextProject, setNextProject] = useState(null);
+            
+            // Filter out hidden projects for navigation
+            const visibleProjects = useMemo(() => window.portfolioData.filter(p => !p.hidden), []);
+            
+            // URL-based navigation support
+            useEffect(() => {
+                const handlePopState = () => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const projectId = urlParams.get('project');
+                    if (projectId) {
+                        const project = visibleProjects.find(p => p.id === projectId);
+                        if (project) {
+                            handleSelectProject(project);
+                        }
+                    } else {
+                        setSelectedProject(null);
+                        setPrevProject(null);
+                        setNextProject(null);
+                    }
+                };
+
+                // Set initial project from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const initialProjectId = urlParams.get('project');
+                if (initialProjectId) {
+                    const project = visibleProjects.find(p => p.id === initialProjectId);
+                    if (project) {
+                        handleSelectProject(project);
+                    }
+                }
+
+                window.addEventListener('popstate', handlePopState);
+                return () => window.removeEventListener('popstate', handlePopState);
+            }, []);
+
+            // Update URL when project selection changes
+            useEffect(() => {
+                const urlParams = new URLSearchParams(window.location.search);
+                
+                if (selectedProject) {
+                    urlParams.set('project', selectedProject.id);
+                } else {
+                    urlParams.delete('project');
+                }
+                
+                const newUrl = urlParams.toString() 
+                    ? window.location.pathname + '?' + urlParams.toString()
+                    : window.location.pathname;
+                
+                // Only update if URL actually changed to avoid unnecessary history entries
+                if (newUrl !== window.location.pathname + window.location.search) {
+                    window.history.pushState(null, '', newUrl);
+                }
+            }, [selectedProject]);
+            
+            const handleSelectProject = (project) => {
+                const currentIndex = visibleProjects.findIndex(p => p.id === project.id);
+                const canGoToPrev = currentIndex > 0;
+                const canGoToNext = currentIndex < visibleProjects.length - 1;
+                
+                setPrevProject(canGoToPrev ? visibleProjects[currentIndex - 1] : null);
+                setNextProject(canGoToNext ? visibleProjects[currentIndex + 1] : null);
+                setSelectedProject(project);
+            };
+            
+            const handleDeselectProject = () => {
+                setSelectedProject(null);
+                setPrevProject(null);
+                setNextProject(null);
+            };
+            
+            const renderContent = () => {
+                if (selectedProject) {
+                    return React.createElement(ProjectDetail, { 
+                        project: selectedProject, 
+                        onBack: handleDeselectProject, 
+                        onNextProject: nextProject ? () => handleSelectProject(nextProject) : null, 
+                        onPrevProject: prevProject ? () => handleSelectProject(prevProject) : null 
+                    });
+                }
+                return React.createElement(PortfolioDisplay, { onProjectSelect: handleSelectProject });
+            };
+            
+            return React.createElement('div', { className: "min-h-screen flex flex-col" },
+                React.createElement(AppHeader, { full: !!!selectedProject, settings: window.portfolioSettings }),
+                React.createElement('main', { className: "flex-grow container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col" }, renderContent()),
+                React.createElement(Footer, null)
+            );
+        };
+        
+        const root = createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+    </script>
+    
+</body>
+</html>
+  
